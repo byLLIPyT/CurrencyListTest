@@ -29,25 +29,15 @@ class MainViewController: UITableViewController {
         
         return USDCourse.count
     }
-
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-
-        cell.textLabel?.text = USDCourse[indexPath.row].value
-        cell.editingStyle = 
-        cell.detailTextLabel?.text = USDCourse[indexPath.row].recordDate
-        
-        if let text = (cell.textLabel?.text) {
-            if let currentPrice = Double(text) {
-                if currentPrice > Settings.shared.limitPrice {
-                    cell.backgroundColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1)
-                } else {
-                    cell.backgroundColor = .white
-                }
-            }
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CurrencyCell
+        cell.configureCell(currency: USDCourse[indexPath.row])
         return cell
+    }
+        
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
     }
     
     private func configureLimitButton() {
@@ -61,7 +51,6 @@ class MainViewController: UITableViewController {
     }
 
     @objc func limitPrice() {
-        
         showAlert()
-    }
+        }    
 }

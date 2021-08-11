@@ -21,7 +21,7 @@ extension MainViewController: XMLParserDelegate {
     }
     
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-                
+        
         if elementName == "Record" {
             let newCurrency = USD(recordDate: recordDate.replacingOccurrences(of: ".", with: "/"), value: value.replacingOccurrences(of: ",", with: "."))
             USDCourse.append(newCurrency)
@@ -53,11 +53,14 @@ extension MainViewController {
             } else {
                 Settings.shared.limitPrice = 0.0
             }
+            
         }
         let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
         limitAlert.addAction(okAction)
         limitAlert.addAction(cancelAction)
-        print(Settings.shared.limitPrice)
         present(limitAlert, animated: true, completion: nil)
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
 }
