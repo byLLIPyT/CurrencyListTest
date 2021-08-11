@@ -10,7 +10,6 @@ import UIKit
 class MainViewController: UITableViewController {
 
     var USDCourse: [USD] = []
-    var nameCurrency = String()
     var value = String()
     var recordDate = String()
     var elementName = String()
@@ -18,9 +17,14 @@ class MainViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let month = Month()
+        let fromDate = month.dateMonthAgo()
+        let toDate = month.startMonth()
+        
         tableView.register(CurrencyCell.self, forCellReuseIdentifier: "Cell")
         configureLimitButton()
-        networkManager.fetchXML(delegate: self, fromDate: "01/08/2021", toDate: "10/08/2021", currencyCode: "R01235")
+        networkManager.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: "R01235")
     }
 
     // MARK: - Table view data source
@@ -31,6 +35,7 @@ class MainViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CurrencyCell
         cell.configureCell(currency: USDCourse[indexPath.row])
         return cell
@@ -52,5 +57,5 @@ class MainViewController: UITableViewController {
 
     @objc func limitPrice() {
         showAlert()
-        }    
+    }
 }

@@ -10,8 +10,7 @@ import UIKit
 extension MainViewController: XMLParserDelegate {
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
-        if elementName == "Record" {
-            nameCurrency = String()
+        if elementName == "Record" {            
             value = String()
             if let currentDate = attributeDict["Date"] {
                 recordDate += currentDate
@@ -30,8 +29,8 @@ extension MainViewController: XMLParserDelegate {
     }
     
     func parser(_ parser: XMLParser, foundCharacters string: String) {
-        let data = string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         
+        let data = string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         if !data.isEmpty {
             if self.elementName == "Value" {
                 value += data
@@ -41,6 +40,7 @@ extension MainViewController: XMLParserDelegate {
 }
 
 extension MainViewController {
+    
     func showAlert() {
         let limitAlert = UIAlertController(title: "Установка цены", message: "Введите лимит", preferredStyle: .alert)
         limitAlert.addTextField { (text) in
@@ -53,14 +53,13 @@ extension MainViewController {
             } else {
                 Settings.shared.limitPrice = 0.0
             }
-            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
         let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
         limitAlert.addAction(okAction)
         limitAlert.addAction(cancelAction)
         present(limitAlert, animated: true, completion: nil)
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
     }
 }
