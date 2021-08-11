@@ -8,22 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		AB0403B626C3BC56007FEBD7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0403B526C3BC56007FEBD7 /* AppDelegate.swift */; };
-		AB0403B826C3BC56007FEBD7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0403B726C3BC56007FEBD7 /* SceneDelegate.swift */; };
-		AB0403BA26C3BC56007FEBD7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0403B926C3BC56007FEBD7 /* ViewController.swift */; };
-		AB0403BD26C3BC56007FEBD7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB0403BB26C3BC56007FEBD7 /* Main.storyboard */; };
 		AB0403BF26C3BC58007FEBD7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB0403BE26C3BC58007FEBD7 /* Assets.xcassets */; };
 		AB0403C226C3BC58007FEBD7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB0403C026C3BC58007FEBD7 /* LaunchScreen.storyboard */; };
+		AB0403D126C3BCBC007FEBD7 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0403D026C3BCBC007FEBD7 /* MainViewController.swift */; };
+		AB0403D426C3BCCD007FEBD7 /* CurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0403D326C3BCCD007FEBD7 /* CurrencyCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		AB0403B226C3BC56007FEBD7 /* CurrencyListTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CurrencyListTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB0403B526C3BC56007FEBD7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		AB0403B726C3BC56007FEBD7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		AB0403B926C3BC56007FEBD7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		AB0403BC26C3BC56007FEBD7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		AB0403BE26C3BC58007FEBD7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AB0403C126C3BC58007FEBD7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AB0403C326C3BC58007FEBD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AB0403D026C3BCBC007FEBD7 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		AB0403D326C3BCCD007FEBD7 /* CurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +54,38 @@
 		AB0403B426C3BC56007FEBD7 /* CurrencyListTest */ = {
 			isa = PBXGroup;
 			children = (
-				AB0403B526C3BC56007FEBD7 /* AppDelegate.swift */,
-				AB0403B726C3BC56007FEBD7 /* SceneDelegate.swift */,
-				AB0403B926C3BC56007FEBD7 /* ViewController.swift */,
-				AB0403BB26C3BC56007FEBD7 /* Main.storyboard */,
-				AB0403BE26C3BC58007FEBD7 /* Assets.xcassets */,
-				AB0403C026C3BC58007FEBD7 /* LaunchScreen.storyboard */,
-				AB0403C326C3BC58007FEBD7 /* Info.plist */,
+				AB0403CF26C3BC9E007FEBD7 /* Managers */,
+				AB0403CE26C3BC98007FEBD7 /* Views */,
+				AB0403CD26C3BC8F007FEBD7 /* SupportingFiles */,
 			);
 			path = CurrencyListTest;
+			sourceTree = "<group>";
+		};
+		AB0403CD26C3BC8F007FEBD7 /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				AB0403BE26C3BC58007FEBD7 /* Assets.xcassets */,
+				AB0403B526C3BC56007FEBD7 /* AppDelegate.swift */,
+				AB0403C326C3BC58007FEBD7 /* Info.plist */,
+			);
+			path = SupportingFiles;
+			sourceTree = "<group>";
+		};
+		AB0403CE26C3BC98007FEBD7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AB0403C026C3BC58007FEBD7 /* LaunchScreen.storyboard */,
+				AB0403D026C3BCBC007FEBD7 /* MainViewController.swift */,
+				AB0403D326C3BCCD007FEBD7 /* CurrencyCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		AB0403CF26C3BC9E007FEBD7 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Managers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -126,7 +147,6 @@
 			files = (
 				AB0403C226C3BC58007FEBD7 /* LaunchScreen.storyboard in Resources */,
 				AB0403BF26C3BC58007FEBD7 /* Assets.xcassets in Resources */,
-				AB0403BD26C3BC56007FEBD7 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,23 +157,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AB0403BA26C3BC56007FEBD7 /* ViewController.swift in Sources */,
+				AB0403D426C3BCCD007FEBD7 /* CurrencyCell.swift in Sources */,
 				AB0403B626C3BC56007FEBD7 /* AppDelegate.swift in Sources */,
-				AB0403B826C3BC56007FEBD7 /* SceneDelegate.swift in Sources */,
+				AB0403D126C3BCBC007FEBD7 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		AB0403BB26C3BC56007FEBD7 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				AB0403BC26C3BC56007FEBD7 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		AB0403C026C3BC58007FEBD7 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -288,7 +300,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2KRRAMT3WK;
-				INFOPLIST_FILE = CurrencyListTest/Info.plist;
+				INFOPLIST_FILE = CurrencyListTest/SupportingFiles/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -296,7 +309,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.neosoft.CurrencyListTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -307,7 +320,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2KRRAMT3WK;
-				INFOPLIST_FILE = CurrencyListTest/Info.plist;
+				INFOPLIST_FILE = CurrencyListTest/SupportingFiles/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -315,7 +329,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.neosoft.CurrencyListTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
