@@ -9,17 +9,16 @@ import UIKit
 
 class MainViewController: UITableViewController {
 
-    var USDCource: [USD] = []
-     
-    var testData: [USD] = []
+    var USDCourse: [USD] = []
+    var nameCurrency = String()
+    var value = String()
+    var recordDate = String()
+    var elementName = String()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         tableView.register(CurrencyCell.self, forCellReuseIdentifier: "Cell")
-        testData.append(USD(recordDate: "01/08/2021", value: "73.5"))
-        testData.append(USD(recordDate: "02/08/2021", value: "75.5"))
-        
         configureLimitButton()
         
     }
@@ -27,22 +26,23 @@ class MainViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return testData.count
+        
+        return USDCourse.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 
-        cell.textLabel?.text = testData[indexPath.row].value
+        cell.textLabel?.text = USDCourse[indexPath.row].value
         
+        /*
         if let text = cell.textLabel?.text, let currentPrice = Double(text) {
             if currentPrice > 75.0 {
                 cell.backgroundColor = .green
             }
         }      
-        
+        */
         return cell
     }
     
@@ -57,8 +57,7 @@ class MainViewController: UITableViewController {
     }
 
     @objc func limitPrice() {
-        print("new price")
+        showAlert()
     }
-    
 
 }

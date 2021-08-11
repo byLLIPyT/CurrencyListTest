@@ -5,20 +5,56 @@
 //  Created by Александр Уткин on 11.08.2021.
 //
 
-import Foundation
+import UIKit
 
 extension MainViewController: XMLParserDelegate {
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
-        
+        if elementName == "Record" {
+            nameCurrency = String()
+            value = String()
+            recordDate = String()
+        }
+        self.elementName = elementName
     }
     
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-        
+        if elementName == "Record" {
+            let newCurrency = USD(recordDate: recordDate, value: value)
+            USDCourse.append(newCurrency)
+        }
     }
     
     func parser(_ parser: XMLParser, foundCharacters string: String) {
+        let data = string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         
+        if !data.isEmpty {
+            if self.elementName == "Value" {
+                value += data
+            }
+        }
     }
-    
+}
+
+extension MainViewController {
+    func showAlert() {
+        let limitAlert = UIAlertController(title: "Установка цены", message: "Введите лимит", preferredStyle: .alert)
+        limitAlert.addTextField { (text) in
+            text.placeholder = "Введите курс"
+        }
+        let okAction = UIAlertAction(title: "OK", style: .default) { (limit) in
+            let textLimit = limitAlert.textFields?.first?.text
+            
+            if let textLimit = textLimit, let doubleLimit = Double(textLimit) {
+                Settings.shared.limitPrice = doubleLimit
+            } else {
+                Settings.shared.limitPrice = 0.0
+            }
+        }
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
+        limitAlert.addAction(okAction)
+        limitAlert.addAction(cancelAction)
+        print(Settings.shared.limitPrice)
+        present(limitAlert, animated: true, completion: nil)
+    }
 }
