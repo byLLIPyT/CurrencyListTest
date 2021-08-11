@@ -13,15 +13,19 @@ extension MainViewController: XMLParserDelegate {
         if elementName == "Record" {
             nameCurrency = String()
             value = String()
-            recordDate = String()
+            if let currentDate = attributeDict["Date"] {
+                recordDate += currentDate
+            }
         }
         self.elementName = elementName
     }
     
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+                
         if elementName == "Record" {
-            let newCurrency = USD(recordDate: recordDate, value: value)
+            let newCurrency = USD(recordDate: recordDate.replacingOccurrences(of: ".", with: "/"), value: value.replacingOccurrences(of: ",", with: "."))
             USDCourse.append(newCurrency)
+            recordDate = String()
         }
     }
     
@@ -44,7 +48,6 @@ extension MainViewController {
         }
         let okAction = UIAlertAction(title: "OK", style: .default) { (limit) in
             let textLimit = limitAlert.textFields?.first?.text
-            
             if let textLimit = textLimit, let doubleLimit = Double(textLimit) {
                 Settings.shared.limitPrice = doubleLimit
             } else {

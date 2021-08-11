@@ -14,13 +14,13 @@ class MainViewController: UITableViewController {
     var value = String()
     var recordDate = String()
     var elementName = String()
-    
+    let networkManager = NetworkManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(CurrencyCell.self, forCellReuseIdentifier: "Cell")
         configureLimitButton()
-        
+        networkManager.fetchXML(delegate: self, fromDate: "01/08/2021", toDate: "10/08/2021", currencyCode: "R01235")
     }
 
     // MARK: - Table view data source
@@ -35,14 +35,18 @@ class MainViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 
         cell.textLabel?.text = USDCourse[indexPath.row].value
+        cell.editingStyle = 
+        cell.detailTextLabel?.text = USDCourse[indexPath.row].recordDate
         
-        /*
-        if let text = cell.textLabel?.text, let currentPrice = Double(text) {
-            if currentPrice > 75.0 {
-                cell.backgroundColor = .green
+        if let text = (cell.textLabel?.text) {
+            if let currentPrice = Double(text) {
+                if currentPrice > Settings.shared.limitPrice {
+                    cell.backgroundColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1)
+                } else {
+                    cell.backgroundColor = .white
+                }
             }
-        }      
-        */
+        }
         return cell
     }
     
@@ -57,7 +61,7 @@ class MainViewController: UITableViewController {
     }
 
     @objc func limitPrice() {
+        
         showAlert()
     }
-
 }
