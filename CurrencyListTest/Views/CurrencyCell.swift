@@ -9,15 +9,29 @@ import UIKit
 
 class CurrencyCell: UITableViewCell {
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+    let dateLabel: UILabel = {
+        let dateLabel = UILabel()
+        dateLabel.font = UIFont.boldSystemFont(ofSize: 22)
+        dateLabel.translatesAutoresizingMaskIntoConstraints = false
+        return dateLabel
+    }()
+    
+    let currentCourceLabel: UILabel = {
+        let currentCourceLabel = UILabel()
+        currentCourceLabel.font = UIFont.boldSystemFont(ofSize: 26)
+        currentCourceLabel.translatesAutoresizingMaskIntoConstraints = false
+        return currentCourceLabel
+    }()
+       
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        addSubview(dateLabel)
+        addSubview(currentCourceLabel)
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
-
+    
 }

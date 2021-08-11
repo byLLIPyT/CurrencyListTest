@@ -12,6 +12,10 @@
 		AB0403C226C3BC58007FEBD7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB0403C026C3BC58007FEBD7 /* LaunchScreen.storyboard */; };
 		AB0403D126C3BCBC007FEBD7 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0403D026C3BCBC007FEBD7 /* MainViewController.swift */; };
 		AB0403D426C3BCCD007FEBD7 /* CurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0403D326C3BCCD007FEBD7 /* CurrencyCell.swift */; };
+		AB33D95226C3BDFD00C75A94 /* USD.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33D95126C3BDFD00C75A94 /* USD.swift */; };
+		AB33D95526C3BE5D00C75A94 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33D95426C3BE5D00C75A94 /* NetworkManager.swift */; };
+		AB33D95826C3BF6600C75A94 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33D95726C3BF6600C75A94 /* Settings.swift */; };
+		AB33D95B26C3C29300C75A94 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB33D95A26C3C29300C75A94 /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +26,10 @@
 		AB0403C326C3BC58007FEBD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AB0403D026C3BCBC007FEBD7 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		AB0403D326C3BCCD007FEBD7 /* CurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCell.swift; sourceTree = "<group>"; };
+		AB33D95126C3BDFD00C75A94 /* USD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USD.swift; sourceTree = "<group>"; };
+		AB33D95426C3BE5D00C75A94 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		AB33D95726C3BF6600C75A94 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		AB33D95A26C3C29300C75A94 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +75,7 @@
 				AB0403BE26C3BC58007FEBD7 /* Assets.xcassets */,
 				AB0403B526C3BC56007FEBD7 /* AppDelegate.swift */,
 				AB0403C326C3BC58007FEBD7 /* Info.plist */,
+				AB33D95726C3BF6600C75A94 /* Settings.swift */,
 			);
 			path = SupportingFiles;
 			sourceTree = "<group>";
@@ -84,6 +93,9 @@
 		AB0403CF26C3BC9E007FEBD7 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				AB33D95126C3BDFD00C75A94 /* USD.swift */,
+				AB33D95426C3BE5D00C75A94 /* NetworkManager.swift */,
+				AB33D95A26C3C29300C75A94 /* Extensions.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -157,9 +169,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB33D95826C3BF6600C75A94 /* Settings.swift in Sources */,
+				AB33D95226C3BDFD00C75A94 /* USD.swift in Sources */,
 				AB0403D426C3BCCD007FEBD7 /* CurrencyCell.swift in Sources */,
+				AB33D95526C3BE5D00C75A94 /* NetworkManager.swift in Sources */,
 				AB0403B626C3BC56007FEBD7 /* AppDelegate.swift in Sources */,
 				AB0403D126C3BCBC007FEBD7 /* MainViewController.swift in Sources */,
+				AB33D95B26C3C29300C75A94 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
