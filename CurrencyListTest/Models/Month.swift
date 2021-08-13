@@ -10,26 +10,28 @@ import Foundation
 class Month {
     
     private let calendar = Calendar.current
+    private let dateFormatter = DateFormatter()
     
     func startMonth() -> String {
-        let dateFormatter = DateFormatter()
         let date = Date()
-        dateFormatter.locale = Locale(identifier: "ru_RU")
-        dateFormatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy")
-        dateFormatter.string(from: date)
+        setupDateFormatter(toDate: date)
         return dateFormatter.string(from: date).replacingOccurrences(of: ".", with: "/")
     }
     
     func dateMonthAgo() -> String {
-        let dateFormatter = DateFormatter()
         let newDate = calendar.date(byAdding: .month, value: -1, to: Date())
         if let newDate = newDate {
-            dateFormatter.locale = Locale(identifier: "ru_RU")
-            dateFormatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy")
-            dateFormatter.string(from: newDate)
+            setupDateFormatter(toDate: newDate)
             return dateFormatter.string(from: newDate).replacingOccurrences(of: ".", with: "/")
         } else {
             return ""
         }
+    }
+    
+    private func setupDateFormatter(toDate: Date) -> DateFormatter {
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        dateFormatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy")
+        dateFormatter.string(from: toDate)
+        return dateFormatter
     }
 }

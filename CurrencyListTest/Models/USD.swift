@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct USD {
+struct USD: CurrencyProtocol {
     var recordDate: String
     var value: String
 }

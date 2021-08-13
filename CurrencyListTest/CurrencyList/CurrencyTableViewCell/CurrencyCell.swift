@@ -9,6 +9,13 @@ import UIKit
 
 class CurrencyCell: UITableViewCell {
 
+    let backgroundCellView: UIView = {
+        let backgroundCellView = UIView()
+        backgroundCellView.layer.cornerRadius = 10
+        backgroundCellView.translatesAutoresizingMaskIntoConstraints = false
+        return backgroundCellView
+    }()
+    
     let name: UILabel = {
         let name = UILabel()
         name.font = UIFont.boldSystemFont(ofSize: 22)
@@ -41,31 +48,41 @@ class CurrencyCell: UITableViewCell {
     }
     
     private func configureStack() {
-        addSubview(name)
-        addSubview(dateLabel)
-        addSubview(currentCourceLabel)
+        addSubview(backgroundCellView)
+        backgroundCellView.addSubview(name)
+        backgroundCellView.addSubview(dateLabel)
+        backgroundCellView.addSubview(currentCourceLabel)
+        
+        NSLayoutConstraint.activate([
+            backgroundCellView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            backgroundCellView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            backgroundCellView.leftAnchor.constraint(equalTo: leftAnchor, constant: 5),
+            backgroundCellView.rightAnchor.constraint(equalTo: rightAnchor, constant: -5),
+            backgroundCellView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
+            backgroundCellView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5)
+        ])
         
         let nameLabel = UIStackView(arrangedSubviews: [name, dateLabel])
         nameLabel.distribution = .equalSpacing
         nameLabel.axis = .vertical
         nameLabel.spacing = 2
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(nameLabel)
+        backgroundCellView.addSubview(nameLabel)
         
         let stackLabels = UIStackView(arrangedSubviews: [nameLabel, currentCourceLabel])
         stackLabels.distribution = .equalSpacing
         stackLabels.axis = .horizontal
         stackLabels.spacing = 10
         stackLabels.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(stackLabels)
+        backgroundCellView.addSubview(stackLabels)
         
         NSLayoutConstraint.activate([
-            stackLabels.centerYAnchor.constraint(equalTo: centerYAnchor),
-            stackLabels.centerXAnchor.constraint(equalTo: centerXAnchor),
-            stackLabels.leftAnchor.constraint(equalTo: leftAnchor, constant: 20),
-            stackLabels.rightAnchor.constraint(equalTo: rightAnchor, constant: -20),
-            stackLabels.topAnchor.constraint(equalTo: topAnchor, constant: 5),
-            stackLabels.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5)
+            stackLabels.centerYAnchor.constraint(equalTo: backgroundCellView.centerYAnchor),
+            stackLabels.centerXAnchor.constraint(equalTo: backgroundCellView.centerXAnchor),
+            stackLabels.leftAnchor.constraint(equalTo: backgroundCellView.leftAnchor, constant: 10),
+            stackLabels.rightAnchor.constraint(equalTo: backgroundCellView.rightAnchor, constant: -10),
+            stackLabels.topAnchor.constraint(equalTo: backgroundCellView.topAnchor, constant: 5),
+            stackLabels.bottomAnchor.constraint(equalTo: backgroundCellView.bottomAnchor, constant: -5)
         ])
     }
     
@@ -77,9 +94,15 @@ class CurrencyCell: UITableViewCell {
         if let text = (self.currentCourceLabel.text) {
             if let currentPrice = Double(text) {
                 if currentPrice > Settings.shared.limitPrice {
-                    self.backgroundColor = #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1)
+                    self.backgroundCellView.backgroundColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
+                    self.name.textColor = UIColor.white
+                    self.dateLabel.textColor = UIColor.white
+                    self.currentCourceLabel.textColor = UIColor.white
                 } else {
-                    self.backgroundColor = .white
+                    self.backgroundCellView.backgroundColor = .white
+                    self.name.textColor = UIColor.black
+                    self.dateLabel.textColor = UIColor.black
+                    self.currentCourceLabel.textColor = UIColor.black
                 }
             }
         }        
