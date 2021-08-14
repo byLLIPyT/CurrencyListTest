@@ -86,7 +86,7 @@ class CurrencyCell: UITableViewCell {
         ])
     }
     
-    func configureCell(currency: USD) {
+    func configureCell(currency: Currency) {
         self.dateLabel.text = currency.recordDate
         self.currentCourceLabel.text = currency.value
         self.name.text = "USD"
@@ -98,11 +98,14 @@ class CurrencyCell: UITableViewCell {
                     self.name.textColor = UIColor.white
                     self.dateLabel.textColor = UIColor.white
                     self.currentCourceLabel.textColor = UIColor.white
+                    self.backgroundCellView.layer.borderColor = UIColor.clear.cgColor
                 } else {
                     self.backgroundCellView.backgroundColor = .white
                     self.name.textColor = UIColor.black
                     self.dateLabel.textColor = UIColor.black
                     self.currentCourceLabel.textColor = UIColor.black
+                    self.backgroundCellView.layer.borderWidth = 1
+                    self.backgroundCellView.layer.borderColor = UIColor.black.cgColor
                 }
             }
         }        

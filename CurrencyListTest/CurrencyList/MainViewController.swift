@@ -10,7 +10,7 @@ import UIKit
 class MainViewController: UITableViewController {
 
     private var refControl = UIRefreshControl()
-    var USDCourse: [USD] = []
+    var USDCourse: [Currency] = []
     var value = String()
     var recordDate = String()
     var elementName = String()
@@ -22,10 +22,13 @@ class MainViewController: UITableViewController {
         let fromDate = month.dateMonthAgo()
         let toDate = month.startMonth()
         tableView.register(CurrencyCell.self, forCellReuseIdentifier: "Cell")
+        tableView.separatorStyle = .none
         configureLimitButton()
-        networkManager.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: "R01235")
+        networkManager.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: "R01235") {
+            print("")
+        }
         configureRefreshControl()
-        
+        checkLimitPrice()
     }
     
     private func configureLimitButton() {
@@ -52,10 +55,22 @@ class MainViewController: UITableViewController {
         let fromDate = month.dateMonthAgo()
         let toDate = month.startMonth()
         DispatchQueue.main.async {
-            self.networkManager.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: "R01235")
+            self.networkManager.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: "R01235") {
+                self.USDCourse = []
+            }
             self.tableView.reloadData()
         }
         refControl.endRefreshing()
+    }
+    
+    private func checkLimitPrice() {
+        USDCourse.forEach { (price) in
+            if let price = Double(price.value) {
+                if price > Settings.shared.limitPrice {
+                    showMessageAlert(title: "Price", message: "More then limit price")
+                }
+            }
+        }
     }
     
 // MARK: - UITableViewDataSource

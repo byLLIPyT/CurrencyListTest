@@ -22,7 +22,7 @@ extension MainViewController: XMLParserDelegate {
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         
         if elementName == "Record" {
-            let newCurrency = USD(recordDate: recordDate.replacingOccurrences(of: ".", with: "/"), value: value.replacingOccurrences(of: ",", with: "."))
+            let newCurrency = Currency(recordDate: recordDate.replacingOccurrences(of: ".", with: "/"), value: value.replacingOccurrences(of: ",", with: "."))
             USDCourse.append(newCurrency)
             recordDate = String()
         }
@@ -61,5 +61,12 @@ extension MainViewController {
         limitAlert.addAction(okAction)
         limitAlert.addAction(cancelAction)
         present(limitAlert, animated: true, completion: nil)
+    }
+    
+    func showMessageAlert(title: String, message: String) {
+        let errorAlert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAlert = UIAlertAction(title: "OK", style: .default, handler: nil)
+        errorAlert.addAction(okAlert)
+        present(errorAlert, animated: true, completion: nil)
     }
 }
