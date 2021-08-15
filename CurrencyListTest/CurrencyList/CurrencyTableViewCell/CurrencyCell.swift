@@ -8,7 +8,8 @@
 import UIKit
 
 class CurrencyCell: UITableViewCell {
-
+    
+    let dataManager = DataManager()
     let backgroundCellView: UIView = {
         let backgroundCellView = UIView()
         backgroundCellView.layer.cornerRadius = 10
@@ -36,7 +37,7 @@ class CurrencyCell: UITableViewCell {
         currentCourceLabel.translatesAutoresizingMaskIntoConstraints = false
         return currentCourceLabel
     }()
-       
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -93,7 +94,7 @@ class CurrencyCell: UITableViewCell {
         
         if let text = (self.currentCourceLabel.text) {
             if let currentPrice = Double(text) {
-                if currentPrice > Settings.shared.limitPrice {
+                if let limitPrice = dataManager.fetchData(), currentPrice > limitPrice {
                     self.backgroundCellView.backgroundColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
                     self.name.textColor = UIColor.white
                     self.dateLabel.textColor = UIColor.white

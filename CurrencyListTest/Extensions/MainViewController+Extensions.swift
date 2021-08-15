@@ -12,7 +12,7 @@ extension MainViewController: XMLParserDelegate {
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
         if elementName == XMLConstant.xmlTag {
             value = String()
-            if let currentDate = attributeDict[XMLConstant.xmlAttribute] {
+            if let currentDate = attributeDict[XMLConstant.xmlDateAttribute] {
                 recordDate += currentDate
             }
         }
@@ -40,8 +40,9 @@ extension MainViewController: XMLParserDelegate {
 }
 
 extension MainViewController {
-    
+       
     func showAlert() {
+        let dataManager = DataManager()
         let limitAlert = UIAlertController(title: "Установка цены", message: "Введите лимит", preferredStyle: .alert)
         limitAlert.addTextField { (text) in
             text.placeholder = "Введите курс"
@@ -49,9 +50,9 @@ extension MainViewController {
         let okAction = UIAlertAction(title: "OK", style: .default) { (limit) in
             let textLimit = limitAlert.textFields?.first?.text
             if let textLimit = textLimit, let doubleLimit = Double(textLimit) {
-                Settings.shared.limitPrice = doubleLimit
+                dataManager.saveData(value: doubleLimit)
             } else {
-                Settings.shared.limitPrice = 0.0
+                dataManager.saveData(value: 0.0)                
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()

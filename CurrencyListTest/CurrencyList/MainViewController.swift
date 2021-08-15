@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class MainViewController: UITableViewController {
     
@@ -16,6 +17,8 @@ class MainViewController: UITableViewController {
         return spinner
     }()
     
+    let dataManager = DataManager()
+    
     private var refControl = UIRefreshControl()
     var USDCourse: [Currency] = []
     var value = String()
@@ -25,7 +28,7 @@ class MainViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-                
+        
         tableView.addSubview(spinner)
         let month = Month()
         let fromDate = month.dateMonthAgo()
@@ -52,7 +55,7 @@ class MainViewController: UITableViewController {
         let item = UIBarButtonItem(customView: limitButton)
         self.navigationItem.setRightBarButton(item, animated: true)
     }
-        
+    
     @objc func limitPrice() {
         showAlert()
     }
@@ -79,32 +82,34 @@ class MainViewController: UITableViewController {
     private func checkLimitPrice() {
         USDCourse.forEach { (price) in
             if let price = Double(price.value) {
-                if price > Settings.shared.limitPrice {
-                    showMessageAlert(title: "", message: "Обнаружена цена выше лимита")
+                if let limit = dataManager.fetchData() {
+                    if price > limit {
+                        showMessageAlert(title: "", message: "Обнаружена цена выше лимита")
+                    }
                 }
             }
         }
     }
-    
-    // MARK: - UITableViewDataSource
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return USDCourse.count
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constant.cellIdentifier, for: indexPath) as! CurrencyCell
-        cell.configureCell(currency: USDCourse[indexPath.row])
-        return cell
-    }
-    
-    // MARK: - UITableViewDelegate
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return Constant.heightCell
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-    }
+
+// MARK: - UITableViewDataSource
+
+override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return USDCourse.count
+}
+
+override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(withIdentifier: Constant.cellIdentifier, for: indexPath) as! CurrencyCell
+    cell.configureCell(currency: USDCourse[indexPath.row])
+    return cell
+}
+
+// MARK: - UITableViewDelegate
+
+override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return Constant.heightCell
+}
+
+override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    tableView.deselectRow(at: indexPath, animated: true)
+}
 }
