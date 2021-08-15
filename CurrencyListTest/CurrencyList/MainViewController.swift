@@ -30,7 +30,7 @@ class MainViewController: UITableViewController {
         let month = Month()
         let fromDate = month.dateMonthAgo()
         let toDate = month.startMonth()
-        tableView.register(CurrencyCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(CurrencyCell.self, forCellReuseIdentifier: Constant.cellIdentifier)
         tableView.separatorStyle = .none
         configureLimitButton()
         NSLayoutConstraint.activate([
@@ -38,7 +38,7 @@ class MainViewController: UITableViewController {
             spinner.centerXAnchor.constraint(equalTo: tableView.centerXAnchor)
         ])
         spinner.startAnimating()
-        networkManager.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: "R01235") { }
+        networkManager.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: Constant.usdCode) { }
         self.spinner.stopAnimating()
         configureRefreshControl()
         checkLimitPrice()
@@ -46,7 +46,7 @@ class MainViewController: UITableViewController {
     
     private func configureLimitButton() {
         let limitButton = UIButton(type: .custom)
-        limitButton.setTitle("Установить лимит", for: .normal)
+        limitButton.setTitle("Лимит", for: .normal)
         limitButton.setTitleColor(.blue, for: .normal)
         limitButton.addTarget(self, action: #selector(limitPrice), for: .touchUpInside)
         let item = UIBarButtonItem(customView: limitButton)
@@ -68,7 +68,7 @@ class MainViewController: UITableViewController {
         let fromDate = month.dateMonthAgo()
         let toDate = month.startMonth()
         DispatchQueue.main.async {
-            self.networkManager.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: "R01235") {
+            self.networkManager.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: Constant.usdCode) {
                 self.USDCourse = []
             }
             self.tableView.reloadData()
@@ -80,7 +80,7 @@ class MainViewController: UITableViewController {
         USDCourse.forEach { (price) in
             if let price = Double(price.value) {
                 if price > Settings.shared.limitPrice {
-                    showMessageAlert(title: "Price", message: "More then limit price")
+                    showMessageAlert(title: "", message: "Обнаружена цена выше лимита")
                 }
             }
         }
@@ -93,7 +93,7 @@ class MainViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CurrencyCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constant.cellIdentifier, for: indexPath) as! CurrencyCell
         cell.configureCell(currency: USDCourse[indexPath.row])
         return cell
     }
@@ -101,7 +101,7 @@ class MainViewController: UITableViewController {
     // MARK: - UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+        return Constant.heightCell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

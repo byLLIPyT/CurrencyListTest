@@ -10,9 +10,9 @@ import UIKit
 extension MainViewController: XMLParserDelegate {
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
-        if elementName == "Record" {            
+        if elementName == XMLConstant.xmlTag {
             value = String()
-            if let currentDate = attributeDict["Date"] {
+            if let currentDate = attributeDict[XMLConstant.xmlAttribute] {
                 recordDate += currentDate
             }
         }
@@ -21,7 +21,7 @@ extension MainViewController: XMLParserDelegate {
     
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         
-        if elementName == "Record" {
+        if elementName == XMLConstant.xmlTag {
             let newCurrency = Currency(recordDate: recordDate.replacingOccurrences(of: ".", with: "/"), value: value.replacingOccurrences(of: ",", with: "."))
             USDCourse.append(newCurrency)
             recordDate = String()
@@ -32,7 +32,7 @@ extension MainViewController: XMLParserDelegate {
         
         let data = string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         if !data.isEmpty {
-            if self.elementName == "Value" {
+            if self.elementName == XMLConstant.xmlAttribute {
                 value += data
             }
         }

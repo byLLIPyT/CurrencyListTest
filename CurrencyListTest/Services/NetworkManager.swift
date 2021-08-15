@@ -17,7 +17,7 @@ struct NetworkManager {
             parser.delegate = delegate
             completion?()
             if !parser.parse() {
-                delegate.showMessageAlert(title: "Error", message: "Don't fetch XML")
+                delegate.showMessageAlert(title: "Ошибка", message: "Не удалось прочитать файл XML")
             } 
         }        
     }
