@@ -23,7 +23,7 @@ extension MainViewController: XMLParserDelegate {
         
         if elementName == XMLConstant.xmlTag {
             let newCurrency = Currency(recordDate: recordDate.replacingOccurrences(of: ".", with: "/"), value: value.replacingOccurrences(of: ",", with: "."))
-            USDCourse.append(newCurrency)
+            currencyRate.append(newCurrency)
             recordDate = String()
         }
     }

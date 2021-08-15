@@ -20,7 +20,7 @@ class MainViewController: UITableViewController {
     let dataManager = DataManager()
     
     private var refControl = UIRefreshControl()
-    var USDCourse: [Currency] = []
+    var currencyRate: [Currency] = []
     var value = String()
     var recordDate = String()
     var elementName = String()
@@ -30,9 +30,6 @@ class MainViewController: UITableViewController {
         super.viewDidLoad()
         
         tableView.addSubview(spinner)
-        let month = Month()
-        let fromDate = month.dateMonthAgo()
-        let toDate = month.startMonth()
         tableView.register(CurrencyCell.self, forCellReuseIdentifier: Constant.cellIdentifier)
         tableView.separatorStyle = .none
         configureLimitButton()
@@ -41,7 +38,7 @@ class MainViewController: UITableViewController {
             spinner.centerXAnchor.constraint(equalTo: tableView.centerXAnchor)
         ])
         spinner.startAnimating()
-        networkManager.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: Constant.usdCode) { }
+        fetchData()
         self.spinner.stopAnimating()
         configureRefreshControl()
         checkLimitPrice()
@@ -56,6 +53,22 @@ class MainViewController: UITableViewController {
         self.navigationItem.setRightBarButton(item, animated: true)
     }
     
+    private func fetchData() {
+        let month = Month()
+        let fromDate = month.dateMonthAgo()
+        let toDate = month.startMonth()
+        networkManager.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: Constant.usdCode) { }
+    }
+    
+    private func fetchDataAndDelete() {
+        let month = Month()
+        let fromDate = month.dateMonthAgo()
+        let toDate = month.startMonth()
+        networkManager.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: Constant.usdCode) {
+            self.currencyRate = []
+        }
+    }
+    
     @objc func limitPrice() {
         showAlert()
     }
@@ -66,21 +79,21 @@ class MainViewController: UITableViewController {
         tableView.addSubview(refControl)
     }
     
+    private func cellViewModel(for indexPath: IndexPath) -> CurrencyCellViewModelProtocol? {
+        let currency = currencyRate[indexPath.row]
+        return CurrencyCellViewModel(currencyData: currency)
+    }
+    
     @objc func refresh() {
-        let month = Month()
-        let fromDate = month.dateMonthAgo()
-        let toDate = month.startMonth()
+        fetchDataAndDelete()
         DispatchQueue.main.async {
-            self.networkManager.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: Constant.usdCode) {
-                self.USDCourse = []
-            }
             self.tableView.reloadData()
         }
         refControl.endRefreshing()
     }
     
     private func checkLimitPrice() {
-        USDCourse.forEach { (price) in
+        currencyRate.forEach { (price) in
             if let price = Double(price.value) {
                 if let limit = dataManager.fetchData() {
                     if price > limit {
@@ -90,26 +103,26 @@ class MainViewController: UITableViewController {
             }
         }
     }
-
-// MARK: - UITableViewDataSource
-
-override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return USDCourse.count
-}
-
-override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: Constant.cellIdentifier, for: indexPath) as! CurrencyCell
-    cell.configureCell(currency: USDCourse[indexPath.row])
-    return cell
-}
-
-// MARK: - UITableViewDelegate
-
-override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return Constant.heightCell
-}
-
-override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPath, animated: true)
-}
+    
+    // MARK: - UITableViewDataSource
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return currencyRate.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constant.cellIdentifier, for: indexPath) as! CurrencyCell        
+        cell.viewModel = cellViewModel(for: indexPath)
+        return cell
+    }
+    
+    // MARK: - UITableViewDelegate
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return Constant.heightCell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 }

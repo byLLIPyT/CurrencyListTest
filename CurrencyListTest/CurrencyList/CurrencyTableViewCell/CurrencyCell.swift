@@ -8,8 +8,17 @@
 import UIKit
 
 class CurrencyCell: UITableViewCell {
-    
-    let dataManager = DataManager()
+            
+    var viewModel: CurrencyCellViewModelProtocol! {
+        didSet {
+            self.dateLabel.text = viewModel.recordDate
+            self.currentCourceLabel.text = viewModel.value
+            self.limitPrice = viewModel.limitPrice
+            self.name.text = "USD"
+            self.configureCell()
+        }
+    }
+         
     let backgroundCellView: UIView = {
         let backgroundCellView = UIView()
         backgroundCellView.layer.cornerRadius = 10
@@ -38,9 +47,10 @@ class CurrencyCell: UITableViewCell {
         return currentCourceLabel
     }()
     
+    var limitPrice: Double?
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
         configureStack()
     }
     
@@ -87,14 +97,11 @@ class CurrencyCell: UITableViewCell {
         ])
     }
     
-    func configureCell(currency: Currency) {
-        self.dateLabel.text = currency.recordDate
-        self.currentCourceLabel.text = currency.value
-        self.name.text = "USD"
+    func configureCell(){
         
         if let text = (self.currentCourceLabel.text) {
             if let currentPrice = Double(text) {
-                if let limitPrice = dataManager.fetchData(), currentPrice > limitPrice {
+                if let limitPrice = limitPrice, currentPrice > limitPrice {
                     self.backgroundCellView.backgroundColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
                     self.name.textColor = UIColor.white
                     self.dateLabel.textColor = UIColor.white
