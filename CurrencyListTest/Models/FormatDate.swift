@@ -7,31 +7,27 @@
 
 import Foundation
 
-class Month {
+class FormatDate {
     
     private let calendar = Calendar.current
     private let dateFormatter = DateFormatter()
     
-    func startMonth() -> String {
-        let date = Date()
-        setupDateFormatter(toDate: date)
-        return dateFormatter.string(from: date).replacingOccurrences(of: ".", with: "/")
+    init() {
+        setupDateFormatter()
     }
     
-    func dateMonthAgo() -> String {
-        let newDate = calendar.date(byAdding: .month, value: -1, to: Date())
+    func dayOfMonth(returnCurrentDay: Bool) -> String {
+        let newDate = calendar.date(byAdding: .month, value: returnCurrentDay ? 0 : -1, to: Date())
         if let newDate = newDate {
-            setupDateFormatter(toDate: newDate)
+            dateFormatter.string(from: newDate)
             return dateFormatter.string(from: newDate).replacingOccurrences(of: ".", with: "/")
         } else {
             return ""
         }
     }
     
-    private func setupDateFormatter(toDate: Date) -> DateFormatter {
+    private func setupDateFormatter() {
         dateFormatter.locale = Locale(identifier: "ru_RU")
         dateFormatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy")
-        dateFormatter.string(from: toDate)
-        return dateFormatter
     }
 }

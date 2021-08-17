@@ -25,7 +25,7 @@ class MainViewController: UITableViewController {
     var recordDate = String()
     var elementName = String()
     let networkManager = NetworkManager()
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -38,7 +38,7 @@ class MainViewController: UITableViewController {
             spinner.centerXAnchor.constraint(equalTo: tableView.centerXAnchor)
         ])
         spinner.startAnimating()
-        fetchData()
+        fetchData(reset: false)
         self.spinner.stopAnimating()
         configureRefreshControl()
         checkLimitPrice()
@@ -46,26 +46,21 @@ class MainViewController: UITableViewController {
     
     private func configureLimitButton() {
         let limitButton = UIButton(type: .custom)
-        limitButton.setTitle("Лимит", for: .normal)
+        limitButton.setTitle(TextConstant.titleLimitButton, for: .normal)
         limitButton.setTitleColor(.blue, for: .normal)
         limitButton.addTarget(self, action: #selector(limitPrice), for: .touchUpInside)
         let item = UIBarButtonItem(customView: limitButton)
-        self.navigationItem.setRightBarButton(item, animated: true)
+        navigationItem.setRightBarButton(item, animated: true)
     }
     
-    private func fetchData() {
-        let month = Month()
-        let fromDate = month.dateMonthAgo()
-        let toDate = month.startMonth()
-        networkManager.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: Constant.usdCode) { }
-    }
-    
-    private func fetchDataAndDelete() {
-        let month = Month()
-        let fromDate = month.dateMonthAgo()
-        let toDate = month.startMonth()
-        networkManager.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: Constant.usdCode) {
-            self.currencyRate = []
+    private func fetchData(reset: Bool) {
+        let formaDate = FormatDate()
+        let fromDate = formaDate.dayOfMonth(returnCurrentDay: false)
+        let toDate = formaDate.dayOfMonth(returnCurrentDay: true)
+        if reset {
+            networkManager.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: Constant.usdCode) { self.currencyRate = [] }
+        } else {
+            networkManager.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: Constant.usdCode) {  }
         }
     }
     
@@ -78,14 +73,14 @@ class MainViewController: UITableViewController {
         refControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
         tableView.addSubview(refControl)
     }
-    
+        
     private func cellViewModel(for indexPath: IndexPath) -> CurrencyCellViewModelProtocol? {
         let currency = currencyRate[indexPath.row]
         return CurrencyCellViewModel(currencyData: currency)
     }
     
     @objc func refresh() {
-        fetchDataAndDelete()
+        fetchData(reset: true)
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
@@ -93,17 +88,45 @@ class MainViewController: UITableViewController {
     }
     
     private func checkLimitPrice() {
-        currencyRate.forEach { (price) in
-            if let price = Double(price.value) {
-                if let limit = dataManager.fetchData() {
-                    if price > limit {
-                        showMessageAlert(title: "", message: "Обнаружена цена выше лимита")
-                    }
-                }
-            }
+        let wrongPrice = currencyRate
+            .compactMap { Double($0.value) }
+            .first { $0 > dataManager.fetchCDData() ?? 0 && dataManager.fetchCDData() != nil } != nil
+        
+        if wrongPrice {
+            showMessageAlert(title: "", message: TextConstant.messageAlert)
         }
     }
     
+    func showAlert() {
+        let dataManager = DataManager()
+        let limitAlert = UIAlertController(title: TextConstant.limitAlertTitle, message: TextConstant.limitAlertMessage, preferredStyle: .alert)
+        limitAlert.addTextField { (text) in
+            text.placeholder = TextConstant.placeholderText
+        }
+        let okAction = UIAlertAction(title: "OK", style: .default) { (limit) in
+            let textLimit = limitAlert.textFields?.first?.text
+            if let textLimit = textLimit, let doubleLimit = Double(textLimit) {
+                dataManager.saveData(value: doubleLimit)
+            } else {
+                dataManager.saveData(value: 0.0)
+            }
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+        let cancelAction = UIAlertAction(title: TextConstant.cancelTitle, style: .cancel, handler: nil)
+        limitAlert.addAction(okAction)
+        limitAlert.addAction(cancelAction)
+        present(limitAlert, animated: true, completion: nil)
+    }
+    
+    func showMessageAlert(title: String, message: String) {
+        let errorAlert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAlert = UIAlertAction(title: "OK", style: .default, handler: nil)
+        errorAlert.addAction(okAlert)
+        present(errorAlert, animated: true, completion: nil)
+    }
+
     // MARK: - UITableViewDataSource
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -111,7 +134,7 @@ class MainViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constant.cellIdentifier, for: indexPath) as! CurrencyCell        
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constant.cellIdentifier, for: indexPath) as! CurrencyCell
         cell.viewModel = cellViewModel(for: indexPath)
         return cell
     }
@@ -124,5 +147,38 @@ class MainViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+}
+
+extension MainViewController: XMLParserDelegate {
+    
+    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
+        if elementName == XMLConstant.xmlTag {
+            value = String()
+            if let currentDate = attributeDict[XMLConstant.xmlDateAttribute] {
+                recordDate += currentDate
+            }
+        }
+        self.elementName = elementName
+    }
+    
+    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+        
+        if elementName == XMLConstant.xmlTag {
+            
+            let newCurrency = Currency(recordDate: recordDate.replacingOccurrences(of: ".", with: "/"), value: value.replacingOccurrences(of: ",", with: "."), limitPrice: dataManager.fetchCDData())
+            currencyRate.append(newCurrency)
+            recordDate = String()
+        }
+    }
+    
+    func parser(_ parser: XMLParser, foundCharacters string: String) {
+        
+        let data = string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        if !data.isEmpty {
+            if self.elementName == XMLConstant.xmlAttribute {
+                value += data
+            }
+        }
     }
 }

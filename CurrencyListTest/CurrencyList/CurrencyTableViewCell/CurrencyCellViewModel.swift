@@ -10,7 +10,7 @@ import Foundation
 class CurrencyCellViewModel: CurrencyCellViewModelProtocol {
     
     var limitPrice: Double? {
-        return fetchData()
+        return fetchData()//если не использовать getchData, то ячейка динамически не обновляется, так как viewModel еще не обновилась
     }
         
     private var currencyData: Currency
@@ -29,8 +29,8 @@ class CurrencyCellViewModel: CurrencyCellViewModelProtocol {
         self.currencyData = currencyData
     }
     
-    func fetchData() -> Double? {
-        dataManager.fetchData()
+    func fetchData() -> Double? {        
+        dataManager.fetchCDData()
     }
     
 }

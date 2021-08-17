@@ -8,8 +8,8 @@
 import Foundation
 
 struct NetworkManager {
-    
-    func fetchXML(delegate: MainViewController, fromDate: String, toDate: String, currencyCode: String, completion: (() -> Void)?) {
+     
+    func fetchXML(delegate: XMLParserDelegate, fromDate: String, toDate: String, currencyCode: String, completion: (() -> Void)?) {
         let urlString = "http://cbr.ru/scripts/XML_dynamic.asp?date_req1=\(fromDate)&date_req2=\(toDate)&VAL_NM_RQ=\(currencyCode)"
         
         guard let url = URL(string: urlString) else { return }
@@ -17,8 +17,10 @@ struct NetworkManager {
             parser.delegate = delegate
             completion?()
             if !parser.parse() {
-                delegate.showMessageAlert(title: "Ошибка", message: "Не удалось прочитать файл XML")
-            } 
-        }        
+                if let delegate = delegate as? MainViewController {
+                    delegate.showMessageAlert(title: TextConstant.errorTitle, message: TextConstant.errorFetchXML)
+                }
+            }
+        }
     }
 }

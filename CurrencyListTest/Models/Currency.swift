@@ -10,4 +10,5 @@ import Foundation
 struct Currency: CurrencyProtocol {
     var recordDate: String
     var value: String
+    var limitPrice: Double?
 }

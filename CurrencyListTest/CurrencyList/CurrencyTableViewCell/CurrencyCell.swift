@@ -8,41 +8,41 @@
 import UIKit
 
 class CurrencyCell: UITableViewCell {
-            
+    
     var viewModel: CurrencyCellViewModelProtocol! {
         didSet {
             self.dateLabel.text = viewModel.recordDate
             self.currentCourceLabel.text = viewModel.value
             self.limitPrice = viewModel.limitPrice
-            self.name.text = "USD"
+            self.name.text = TextConstant.usdDescription
             self.configureCell()
         }
     }
-         
+    
     let backgroundCellView: UIView = {
         let backgroundCellView = UIView()
-        backgroundCellView.layer.cornerRadius = 10
+        backgroundCellView.layer.cornerRadius = CellConstant.cornerRadius
         backgroundCellView.translatesAutoresizingMaskIntoConstraints = false
         return backgroundCellView
     }()
     
     let name: UILabel = {
         let name = UILabel()
-        name.font = UIFont.boldSystemFont(ofSize: 22)
+        name.font = UIFont.boldSystemFont(ofSize: CellConstant.largeFontSize)
         name.translatesAutoresizingMaskIntoConstraints = false
         return name
     }()
     
     let dateLabel: UILabel = {
         let dateLabel = UILabel()
-        dateLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        dateLabel.font = UIFont.boldSystemFont(ofSize: CellConstant.smallFontSize)
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         return dateLabel
     }()
     
     let currentCourceLabel: UILabel = {
         let currentCourceLabel = UILabel()
-        currentCourceLabel.font = UIFont.boldSystemFont(ofSize: 22)
+        currentCourceLabel.font = UIFont.boldSystemFont(ofSize: CellConstant.largeFontSize)
         currentCourceLabel.translatesAutoresizingMaskIntoConstraints = false
         return currentCourceLabel
     }()
@@ -67,10 +67,10 @@ class CurrencyCell: UITableViewCell {
         NSLayoutConstraint.activate([
             backgroundCellView.centerYAnchor.constraint(equalTo: centerYAnchor),
             backgroundCellView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            backgroundCellView.leftAnchor.constraint(equalTo: leftAnchor, constant: 5),
-            backgroundCellView.rightAnchor.constraint(equalTo: rightAnchor, constant: -5),
-            backgroundCellView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
-            backgroundCellView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5)
+            backgroundCellView.leftAnchor.constraint(equalTo: leftAnchor, constant: CellConstant.indent),
+            backgroundCellView.rightAnchor.constraint(equalTo: rightAnchor, constant: -CellConstant.indent),
+            backgroundCellView.topAnchor.constraint(equalTo: topAnchor, constant: CellConstant.indent),
+            backgroundCellView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -CellConstant.indent)
         ])
         
         let nameLabel = UIStackView(arrangedSubviews: [name, dateLabel])
@@ -90,32 +90,32 @@ class CurrencyCell: UITableViewCell {
         NSLayoutConstraint.activate([
             stackLabels.centerYAnchor.constraint(equalTo: backgroundCellView.centerYAnchor),
             stackLabels.centerXAnchor.constraint(equalTo: backgroundCellView.centerXAnchor),
-            stackLabels.leftAnchor.constraint(equalTo: backgroundCellView.leftAnchor, constant: 10),
-            stackLabels.rightAnchor.constraint(equalTo: backgroundCellView.rightAnchor, constant: -10),
-            stackLabels.topAnchor.constraint(equalTo: backgroundCellView.topAnchor, constant: 5),
-            stackLabels.bottomAnchor.constraint(equalTo: backgroundCellView.bottomAnchor, constant: -5)
+            stackLabels.leftAnchor.constraint(equalTo: backgroundCellView.leftAnchor, constant: CellConstant.indent),
+            stackLabels.rightAnchor.constraint(equalTo: backgroundCellView.rightAnchor, constant: -CellConstant.indent),
+            stackLabels.topAnchor.constraint(equalTo: backgroundCellView.topAnchor, constant: CellConstant.indent),
+            stackLabels.bottomAnchor.constraint(equalTo: backgroundCellView.bottomAnchor, constant: -CellConstant.indent)
         ])
     }
     
     func configureCell(){
-        
-        if let text = (self.currentCourceLabel.text) {
-            if let currentPrice = Double(text) {
-                if let limitPrice = limitPrice, currentPrice > limitPrice {
-                    self.backgroundCellView.backgroundColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
-                    self.name.textColor = UIColor.white
-                    self.dateLabel.textColor = UIColor.white
-                    self.currentCourceLabel.textColor = UIColor.white
-                    self.backgroundCellView.layer.borderColor = UIColor.clear.cgColor
-                } else {
-                    self.backgroundCellView.backgroundColor = .white
-                    self.name.textColor = UIColor.black
-                    self.dateLabel.textColor = UIColor.black
-                    self.currentCourceLabel.textColor = UIColor.black
-                    self.backgroundCellView.layer.borderWidth = 1
-                    self.backgroundCellView.layer.borderColor = UIColor.black.cgColor
-                }
-            }
-        }        
+        guard
+            let text = (self.currentCourceLabel.text),
+            let currentPrice = Double(text),
+            let limitPrice = limitPrice,
+            currentPrice > limitPrice
+        else {
+            self.backgroundCellView.backgroundColor = CellConstant.whiteColor
+            self.name.textColor = CellConstant.blackColor
+            self.dateLabel.textColor = CellConstant.blackColor
+            self.currentCourceLabel.textColor = CellConstant.blackColor
+            self.backgroundCellView.layer.borderWidth = CellConstant.borderWidth
+            self.backgroundCellView.layer.borderColor = CellConstant.blackColor.cgColor
+            return
+        }
+        self.backgroundCellView.backgroundColor = CellConstant.color
+        self.name.textColor = CellConstant.whiteColor
+        self.dateLabel.textColor = CellConstant.whiteColor
+        self.currentCourceLabel.textColor = CellConstant.whiteColor
+        self.backgroundCellView.layer.borderColor = CellConstant.clearColor.cgColor
     }
 }
