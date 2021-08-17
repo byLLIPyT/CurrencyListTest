@@ -23,10 +23,7 @@ class MainViewController: UITableViewController {
     var value = String()
     var recordDate = String()
     var elementName = String()
-    /// все функции которые вызываются в viewDidLoad должны быть разнесены
-    /// функции с лейаутом в отдельную функцию. Функции с конфигурацией таблицы в другую.
-    /// Функции с загрузкой данных в другую
-    ///
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -88,8 +85,7 @@ class MainViewController: UITableViewController {
         }
         refControl.endRefreshing()
     }
-    
-    /// Модели данных для ячейки создаются по мере скролла таблицы. что неверно конечно. Модели должны быть в массиве как это сделано с currencyRate
+        
     private func cellViewModel(for indexPath: IndexPath) -> CurrencyCellViewModelProtocol? {
         let currency = currencyRate[indexPath.row]
         return CurrencyCellViewModel(currencyData: currency)

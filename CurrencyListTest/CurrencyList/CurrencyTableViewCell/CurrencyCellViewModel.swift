@@ -30,8 +30,6 @@ class CurrencyCellViewModel: CurrencyCellViewModelProtocol {
     }
     
     func fetchData() -> Double? {
-        /// в ячейке таблицы не должно быть взаимодейсвтия с базой данных. в твоем случае все взаимодействие должно быть во view controller. Ячейка должна оставаться тупой максимально. она просто отображает данные. без логики какой либо.
         dataManager.fetchCDData()
     }
-    
 }
