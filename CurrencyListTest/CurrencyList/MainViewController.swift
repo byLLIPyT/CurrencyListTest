@@ -16,32 +16,39 @@ class MainViewController: UITableViewController {
         spinner.translatesAutoresizingMaskIntoConstraints = false
         return spinner
     }()
+    var refControl = UIRefreshControl()
     
     let dataManager = DataManager()
-    
-    private var refControl = UIRefreshControl()
     var currencyRate: [Currency] = []
     var value = String()
     var recordDate = String()
     var elementName = String()
-    let networkManager = NetworkManager()
-        
+    /// все функции которые вызываются в viewDidLoad должны быть разнесены
+    /// функции с лейаутом в отдельную функцию. Функции с конфигурацией таблицы в другую.
+    /// Функции с загрузкой данных в другую
+    ///
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.addSubview(spinner)
+        configureView()
+        spinner.startAnimating()
+        fetchData(reset: false)
+        self.spinner.stopAnimating()
+        if dataManager.checkLimitPrice(to: currencyRate) {
+            showMessageAlert(title: "", message: TextConstant.messageAlert)
+        }
+    }
+    
+    private func configureView() {
         tableView.register(CurrencyCell.self, forCellReuseIdentifier: Constant.cellIdentifier)
+        tableView.addSubview(spinner)
         tableView.separatorStyle = .none
         configureLimitButton()
         NSLayoutConstraint.activate([
             spinner.centerYAnchor.constraint(equalTo: tableView.centerYAnchor),
             spinner.centerXAnchor.constraint(equalTo: tableView.centerXAnchor)
         ])
-        spinner.startAnimating()
-        fetchData(reset: false)
-        self.spinner.stopAnimating()
         configureRefreshControl()
-        checkLimitPrice()
     }
     
     private func configureLimitButton() {
@@ -53,30 +60,25 @@ class MainViewController: UITableViewController {
         navigationItem.setRightBarButton(item, animated: true)
     }
     
+    @objc func limitPrice() {
+        showAlert()
+    }
+    
     private func fetchData(reset: Bool) {
         let formaDate = FormatDate()
         let fromDate = formaDate.dayOfMonth(returnCurrentDay: false)
         let toDate = formaDate.dayOfMonth(returnCurrentDay: true)
         if reset {
-            networkManager.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: Constant.usdCode) { self.currencyRate = [] }
+            XMLManager.shared.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: Constant.usdCode) { self.currencyRate = [] }
         } else {
-            networkManager.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: Constant.usdCode) {  }
+            XMLManager.shared.fetchXML(delegate: self, fromDate: fromDate, toDate: toDate, currencyCode: Constant.usdCode) {  }
         }
-    }
-    
-    @objc func limitPrice() {
-        showAlert()
     }
     
     private func configureRefreshControl() {
         refControl.attributedTitle = NSAttributedString(string: "")
         refControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
         tableView.addSubview(refControl)
-    }
-        
-    private func cellViewModel(for indexPath: IndexPath) -> CurrencyCellViewModelProtocol? {
-        let currency = currencyRate[indexPath.row]
-        return CurrencyCellViewModel(currencyData: currency)
     }
     
     @objc func refresh() {
@@ -87,16 +89,12 @@ class MainViewController: UITableViewController {
         refControl.endRefreshing()
     }
     
-    private func checkLimitPrice() {
-        let wrongPrice = currencyRate
-            .compactMap { Double($0.value) }
-            .first { $0 > dataManager.fetchCDData() ?? 0 && dataManager.fetchCDData() != nil } != nil
-        
-        if wrongPrice {
-            showMessageAlert(title: "", message: TextConstant.messageAlert)
-        }
+    /// Модели данных для ячейки создаются по мере скролла таблицы. что неверно конечно. Модели должны быть в массиве как это сделано с currencyRate
+    private func cellViewModel(for indexPath: IndexPath) -> CurrencyCellViewModelProtocol? {
+        let currency = currencyRate[indexPath.row]
+        return CurrencyCellViewModel(currencyData: currency)
     }
-    
+        
     func showAlert() {
         let dataManager = DataManager()
         let limitAlert = UIAlertController(title: TextConstant.limitAlertTitle, message: TextConstant.limitAlertMessage, preferredStyle: .alert)
@@ -151,7 +149,7 @@ class MainViewController: UITableViewController {
 }
 
 extension MainViewController: XMLParserDelegate {
-    
+        
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
         if elementName == XMLConstant.xmlTag {
             value = String()
@@ -161,19 +159,19 @@ extension MainViewController: XMLParserDelegate {
         }
         self.elementName = elementName
     }
-    
+
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-        
+
         if elementName == XMLConstant.xmlTag {
-            
-            let newCurrency = Currency(recordDate: recordDate.replacingOccurrences(of: ".", with: "/"), value: value.replacingOccurrences(of: ",", with: "."), limitPrice: dataManager.fetchCDData())
+
+            let newCurrency = Currency(recordDate: recordDate.replacingOccurrences(of: ".", with: "/"), value: value.replacingOccurrences(of: ",", with: "."))
             currencyRate.append(newCurrency)
             recordDate = String()
         }
     }
-    
+
     func parser(_ parser: XMLParser, foundCharacters string: String) {
-        
+
         let data = string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         if !data.isEmpty {
             if self.elementName == XMLConstant.xmlAttribute {

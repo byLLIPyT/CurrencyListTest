@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 class DataManager {
-                  
+    
     func fetchCDData() -> Double? {
                         
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
@@ -50,5 +50,11 @@ class DataManager {
             print("\(CoreDataTexts.errorSaveText) \(error), \(error.userInfo)")
         }
     }
-   
+    
+    func checkLimitPrice(to model: [Currency]) -> Bool {
+        let wrongPrice = model
+            .compactMap { Double($0.value) }
+            .first { $0 > fetchCDData() ?? 0 && fetchCDData() != nil } != nil
+        return wrongPrice
+    }
 }

@@ -10,7 +10,7 @@ import Foundation
 class CurrencyCellViewModel: CurrencyCellViewModelProtocol {
     
     var limitPrice: Double? {
-        return fetchData()//если не использовать getchData, то ячейка динамически не обновляется, так как viewModel еще не обновилась
+        return fetchData()
     }
         
     private var currencyData: Currency
@@ -29,7 +29,8 @@ class CurrencyCellViewModel: CurrencyCellViewModelProtocol {
         self.currencyData = currencyData
     }
     
-    func fetchData() -> Double? {        
+    func fetchData() -> Double? {
+        /// в ячейке таблицы не должно быть взаимодейсвтия с базой данных. в твоем случае все взаимодействие должно быть во view controller. Ячейка должна оставаться тупой максимально. она просто отображает данные. без логики какой либо.
         dataManager.fetchCDData()
     }
     
